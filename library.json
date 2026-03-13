@@ -1,0 +1,15 @@
+{
+  "name": "SensorBuilder",
+  "version": "1.0.0",
+  "description": "Builder-style sensor configuration and connection.",
+  "keywords": ["modbus", "arduino", "sensor", "builder", "rs485"],
+  "authors": [
+    {
+      "name": "izasoerya",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "*"
+}
