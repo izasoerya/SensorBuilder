@@ -11,7 +11,7 @@ class CommunicationProperties
 public:
     virtual ~CommunicationProperties() = default;
     virtual void connect() = 0;
-    virtual uint16_t read() = 0;
+    virtual uint16_t read(uint8_t *address) = 0;
 };
 
 class ModbusBase
@@ -110,15 +110,29 @@ public:
         node.begin(base->slaveId, Serial);
     }
 
-    uint16_t read() override
+    uint16_t read(uint8_t *address) override
     {
+        uint8_t responseIndex = (address != nullptr) ? *address : 0;
+        if (responseIndex >= base->lengthAddress)
+        {
+            return 0;
+        }
+
         if (base->functionCode == 0x03)
         {
-            return node.readHoldingRegisters(base->address, base->lengthAddress);
+            uint8_t result = node.readHoldingRegisters(base->address, base->lengthAddress);
+            if (result == node.ku8MBSuccess)
+            {
+                return node.getResponseBuffer(responseIndex);
+            }
         }
         else if (base->functionCode == 0x04)
         {
-            return node.readInputRegisters(base->address, base->lengthAddress);
+            uint8_t result = node.readInputRegisters(base->address, base->lengthAddress);
+            if (result == node.ku8MBSuccess)
+            {
+                return node.getResponseBuffer(responseIndex);
+            }
         }
         return 0;
     }
