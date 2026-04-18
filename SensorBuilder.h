@@ -11,7 +11,7 @@ class CommunicationProperties
 public:
     virtual ~CommunicationProperties() = default;
     virtual void connect() = 0;
-    virtual uint16_t read(uint8_t *address) = 0;
+    virtual uint16_t read(uint8_t responseIndex = 0) = 0;
 };
 
 class ModbusBase
@@ -110,9 +110,8 @@ public:
         node.begin(base->slaveId, Serial);
     }
 
-    uint16_t read(uint8_t *address) override
+    uint16_t read(uint8_t responseIndex) override
     {
-        uint8_t responseIndex = (address != nullptr) ? *address : 0;
         if (responseIndex >= base->lengthAddress)
         {
             return 0;
